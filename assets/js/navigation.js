@@ -54,21 +54,25 @@
 	menuToggle.addEventListener('click', function(e) {
 		e.preventDefault();
 		e.stopPropagation();
+		e.stopImmediatePropagation();
 		
 		if (menuOverlay.classList.contains('active')) {
 			closeMenu();
 		} else {
 			openMenu();
 		}
-	});
+		return false;
+	}, true);
 
 	// Close menu on close button click
 	if (menuClose) {
 		menuClose.addEventListener('click', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
+			e.stopImmediatePropagation();
 			closeMenu();
-		});
+			return false;
+		}, true);
 	}
 
 	// Close menu when clicking outside
