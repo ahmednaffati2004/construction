@@ -72,57 +72,77 @@
       <!-- end:topbar -->
 
       <!-- begin:site-navigation -->
-      <div class="site-header-affix-wrapper">
-        <header id="masthead" class="site-header" role="banner">
-          <div class="container">
-            <div class="row">
-              <div class="col-sm-3">
-                <div class="site-branding">
-                  <h1 class="site-title title-image"><a href="#home" rel="home"><img src="assets/img/img-logo-footer.png" alt="شركة الشارقة الدولية للمقاولات" class="img-responsive" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"><span style="display:none; color: #fff; font-size: 20px; font-weight: bold;">شركة الشارقة الدولية</span></a></h1>
-                </div><!-- .site-branding -->
-              </div><!-- .col-sm-3 -->
+      <nav class="main-navbar">
+        <div class="navbar-container">
+          <div class="navbar-logo">
+            <a href="#home" rel="home">
+              <img src="assets/img/img-logo-footer.png" alt="شركة الشارقة الدولية للمقاولات" class="logo-img">
+              <span class="logo-text">شركة الشارقة الدولية</span>
+            </a>
+          </div>
 
-              <div class="col-sm-9">
-                <nav id="site-navigation" class="main-navigation" role="navigation">
-                  <button class="menu-toggle" type="button" aria-controls="primary-menu" aria-expanded="false"><span class="pe-7s-menu"></span><span class="sr-only">Primary Menu</span></button>
+          <!-- Desktop Menu -->
+          <ul class="navbar-menu desktop-menu">
+            <li class="menu-item"><a href="#home" data-translate="nav-home">الرئيسية</a></li>
+            <li class="menu-item"><a href="#about" data-translate="nav-about">من نحن</a></li>
+            <li class="menu-item"><a href="#service" data-translate="nav-services">خدماتنا</a></li>
+            <li class="menu-item"><a href="#work" data-translate="nav-projects">مشاريعنا</a></li>
+            <li class="menu-item"><a href="#news" data-translate="nav-blog">الأخبار</a></li>
+            <li class="menu-item"><a href="#contact-highlight" data-translate="nav-contact">اتصل بنا</a></li>
+          </ul>
 
-                  <div class="menu-testing-menu-container">
-                    <ul id="primary-menu" class="menu nav-menu" aria-expanded="false">
-                      <li class="menu-item current-menu-item"><a href="#home" data-translate="nav-home">الرئيسية</a></li>
-                      <li class="menu-item"><a href="#about" data-translate="nav-about">من نحن</a></li>
-                      <li class="menu-item"><a href="#service" data-translate="nav-services">خدماتنا</a></li>
-                      <li class="menu-item"><a href="#work" data-translate="nav-projects">مشاريعنا</a></li>
-                      <li class="menu-item"><a href="#news" data-translate="nav-blog">الأخبار</a></li>
-                      <li class="menu-item"><a href="#contact-highlight" data-translate="nav-contact">اتصل بنا</a></li>
-                    </ul>
-                    <!-- Language switcher inside mobile menu -->
-                    <div class="nav-language-mobile">
-                      <div id="language-switcher-mobile" class="language-switcher">
-                        <button class="lang-btn active" data-lang="ar" type="button">
-                          <i class="fa fa-globe"></i> <span class="lang-text">العربية</span>
-                        </button>
-                        <button class="lang-btn" data-lang="en" type="button">
-                          <i class="fa fa-globe"></i> <span class="lang-text">English</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="nav-language">
-                    <div id="language-switcher" class="language-switcher">
-                      <button class="lang-btn active" data-lang="ar" type="button">
-                        <i class="fa fa-globe"></i> <span class="lang-text">العربية</span>
-                      </button>
-                      <button class="lang-btn" data-lang="en" type="button">
-                        <i class="fa fa-globe"></i> <span class="lang-text">English</span>
-                      </button>
-                    </div>
-                  </div>
-                </nav><!-- #site-navigation -->
-              </div><!-- .col-sm-9 -->
-            </div><!-- .row -->
-          </div><!-- .container -->
-        </header><!-- #masthead -->
-      </div><!-- .site-header-affix-wrapper -->
+          <!-- Language Switcher Desktop -->
+          <div class="navbar-language desktop-lang">
+            <div id="language-switcher" class="language-switcher">
+              <button class="lang-btn active" data-lang="ar" type="button">
+                <i class="fa fa-globe"></i> <span class="lang-text">العربية</span>
+              </button>
+              <button class="lang-btn" data-lang="en" type="button">
+                <i class="fa fa-globe"></i> <span class="lang-text">English</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile Menu Toggle -->
+          <button class="mobile-menu-toggle" type="button" aria-label="Toggle Menu">
+            <span class="menu-icon">
+              <span class="icon-line"></span>
+              <span class="icon-line"></span>
+              <span class="icon-line"></span>
+            </span>
+          </button>
+
+          <!-- Mobile Menu Overlay -->
+          <div class="mobile-menu-overlay">
+            <div class="mobile-menu-content">
+              <button class="mobile-menu-close" type="button" aria-label="Close Menu">
+                <span class="close-icon">×</span>
+              </button>
+              
+              <ul class="navbar-menu mobile-menu">
+                <li class="menu-item"><a href="#home" data-translate="nav-home">الرئيسية</a></li>
+                <li class="menu-item"><a href="#about" data-translate="nav-about">من نحن</a></li>
+                <li class="menu-item"><a href="#service" data-translate="nav-services">خدماتنا</a></li>
+                <li class="menu-item"><a href="#work" data-translate="nav-projects">مشاريعنا</a></li>
+                <li class="menu-item"><a href="#news" data-translate="nav-blog">الأخبار</a></li>
+                <li class="menu-item"><a href="#contact-highlight" data-translate="nav-contact">اتصل بنا</a></li>
+              </ul>
+
+              <!-- Language Switcher Mobile -->
+              <div class="navbar-language mobile-lang">
+                <div id="language-switcher-mobile" class="language-switcher">
+                  <button class="lang-btn active" data-lang="ar" type="button">
+                    <i class="fa fa-globe"></i> <span class="lang-text">العربية</span>
+                  </button>
+                  <button class="lang-btn" data-lang="en" type="button">
+                    <i class="fa fa-globe"></i> <span class="lang-text">English</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
       <!-- end:site-navigation -->
 
       <div class="container">
@@ -1027,7 +1047,7 @@
               </li>
               <li>
                 <span class="contact-label" data-translate="contact-location-label">الموقع</span>
-                <span data-translate="contact-location">جنجور الشرقية - ليبيا</span>
+                <span data-translate="contact-location">جنزور الشرقية - ليبيا</span>
               </li>
             </ul>
             <div class="contact-actions">
@@ -1124,6 +1144,14 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/plugins/parallax.min.js"></script>
+    <!-- تعطيل init_navbar قبل تحميل script.min.js -->
+    <script>
+    // تعطيل دالة init_navbar التي تضيف sticky-bar
+    window.init_navbar = function() {
+      // تعطيل الوظيفة - لا تفعل شيء
+      return;
+    };
+    </script>
     <script src="assets/js/navigation.js"></script>
     <script src="assets/plugins/jquery.easing.js"></script>
     <script src="assets/plugins/jquery.magnific-popup.min.js"></script>
@@ -1131,6 +1159,12 @@
     <script src="assets/plugins/isotope.pkgd.min.js"></script>
     <script src="assets/plugins/owl.carousel.min.js"></script>
     <script src="assets/js/script.min.js"></script>
+    <!-- إعادة تعطيل init_navbar بعد تحميل script.min.js -->
+    <script>
+    if (typeof init_navbar === 'function') {
+      window.init_navbar = function() { return; };
+    }
+    </script>
     <script src="assets/js/translations.js"></script>
     <script src="assets/js/language-switcher.js"></script>
     
