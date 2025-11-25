@@ -1,121 +1,119 @@
 /**
- * File navigation.js.
- *
- * Handles toggling the navigation menu for small screens and enables TAB key
- * navigation support for dropdown menus.
+ * Professional Navbar Navigation Handler
+ * Handles mobile menu toggle, smooth scrolling, and accessibility
  */
-( function() {
-	var container, button, menu, links, subMenus, i, len;
 
-	container = document.getElementById( 'site-navigation' );
-	if ( ! container ) {
+(function() {
+	'use strict';
+
+	// تعطيل دالة init_navbar من script.min.js التي تضيف sticky-bar
+	(function() {
+		try {
+			Object.defineProperty(window, 'init_navbar', {
+				configurable: true,
+				get: function() {
+					return function() { return; };
+				},
+				set: function() {
+					// تجاهل أي محاولة لإعادة تعريفها
+				}
+			});
+		} catch (err) {
+			window.init_navbar = function() { return; };
+		}
+	})();
+
+	// Get navbar elements
+	var navbar = document.querySelector('.main-navbar');
+	var menuToggle = document.querySelector('.mobile-menu-toggle');
+	var menuOverlay = document.querySelector('.mobile-menu-overlay');
+	var menuClose = document.querySelector('.mobile-menu-close');
+	var menuLinks = document.querySelectorAll('.navbar-menu a');
+	var navbarContainer = document.querySelector('.navbar-container');
+
+	if (!navbar || !menuToggle || !menuOverlay) {
 		return;
 	}
 
-	button = container.getElementsByTagName( 'button' )[0];
-	if ( 'undefined' === typeof button ) {
-		return;
-	}
-
-	menu = container.getElementsByTagName( 'ul' )[0];
-
-	// Hide menu toggle button if menu is empty and return early.
-	if ( 'undefined' === typeof menu ) {
-		button.style.display = 'none';
-		return;
-	}
-
-	menu.setAttribute( 'aria-expanded', 'false' );
-	if ( -1 === menu.className.indexOf( 'nav-menu' ) ) {
-		menu.className += ' nav-menu';
+	// Menu toggle functions
+	function openMenu() {
+		menuToggle.classList.add('active');
+		menuOverlay.classList.add('active');
+		document.body.style.overflow = 'hidden';
+		menuToggle.setAttribute('aria-expanded', 'true');
 	}
 
 	function closeMenu() {
-		container.className = container.className.replace( ' toggled', '' );
-		button.setAttribute( 'aria-expanded', 'false' );
-		menu.setAttribute( 'aria-expanded', 'false' );
+		menuToggle.classList.remove('active');
+		menuOverlay.classList.remove('active');
+		document.body.style.overflow = '';
+		menuToggle.setAttribute('aria-expanded', 'false');
 	}
-	
-	function openMenu() {
-		container.className += ' toggled';
-		button.setAttribute( 'aria-expanded', 'true' );
-		menu.setAttribute( 'aria-expanded', 'true' );
-	}
-	
-	button.onclick = function() {
-		if ( -1 !== container.className.indexOf( 'toggled' ) ) {
+
+	// Toggle menu on button click
+	menuToggle.addEventListener('click', function(e) {
+		e.preventDefault();
+		e.stopPropagation();
+		
+		if (menuOverlay.classList.contains('active')) {
 			closeMenu();
 		} else {
 			openMenu();
 		}
-	};
-	
-	// Close menu when clicking on close button (::after pseudo-element)
-	var menuContainer = container.querySelector( '.menu-testing-menu-container' );
-	if ( menuContainer ) {
-		// Create actual close button since ::after can't be clicked
-		var closeBtn = document.createElement( 'button' );
-		closeBtn.className = 'menu-close-button';
-		closeBtn.innerHTML = '✕';
-		closeBtn.setAttribute( 'aria-label', 'Close menu' );
-		closeBtn.style.cssText = 'position: absolute; top: 25px; right: 25px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: rgba(255, 255, 255, 0.8); background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.2); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; z-index: 10001; opacity: 0; pointer-events: none;';
-		menuContainer.appendChild( closeBtn );
-		
-		closeBtn.onclick = function( e ) {
+	});
+
+	// Close menu on close button click
+	if (menuClose) {
+		menuClose.addEventListener('click', function(e) {
+			e.preventDefault();
 			e.stopPropagation();
 			closeMenu();
-		};
-		
-		// Show close button when menu opens
-		var observer = new MutationObserver( function( mutations ) {
-			mutations.forEach( function( mutation ) {
-				if ( -1 !== container.className.indexOf( 'toggled' ) ) {
-					closeBtn.style.opacity = '1';
-					closeBtn.style.pointerEvents = 'all';
-				} else {
-					closeBtn.style.opacity = '0';
-					closeBtn.style.pointerEvents = 'none';
-				}
-			});
 		});
-		
-		observer.observe( container, { attributes: true, attributeFilter: [ 'class' ] } );
-		
-		// RTL support
-		if ( document.documentElement.dir === 'rtl' ) {
-			closeBtn.style.right = 'auto';
-			closeBtn.style.left = '25px';
+	}
+
+	// Close menu when clicking outside
+	document.addEventListener('click', function(event) {
+		if (menuOverlay.classList.contains('active')) {
+			var isClickInside = navbarContainer && navbarContainer.contains(event.target);
+			var isMenuToggle = menuToggle.contains(event.target);
+			var isMenuClose = menuClose && menuClose.contains(event.target);
+			var isLanguageButton = event.target.classList.contains('lang-btn') || 
+			                      event.target.closest('.lang-btn');
+			
+			// Don't close if clicking language buttons
+			if (isLanguageButton) {
+				return;
+			}
+			
+			if (!isClickInside && !isMenuToggle && !isMenuClose) {
+				closeMenu();
+			}
 		}
-	}
+	});
 
-	// Get all the link elements within the menu.
-	links    = menu.getElementsByTagName( 'a' );
-	subMenus = menu.getElementsByTagName( 'ul' );
+	// Close menu on ESC key
+	document.addEventListener('keydown', function(event) {
+		if (event.key === 'Escape' && menuOverlay.classList.contains('active')) {
+			closeMenu();
+		}
+	});
 
-	// Set menu items with submenus to aria-haspopup="true".
-	for ( i = 0, len = subMenus.length; i < len; i++ ) {
-		subMenus[i].parentNode.setAttribute( 'aria-haspopup', 'true' );
-	}
-
-	// Each time a menu link is focused or blurred, toggle focus.
-	for ( i = 0, len = links.length; i < len; i++ ) {
-		links[i].addEventListener( 'focus', toggleFocus, true );
-		links[i].addEventListener( 'blur', toggleFocus, true );
-		
-		// Handle link clicks - smooth scroll and close menu
-		links[i].addEventListener( 'click', function(e) {
+	// Smooth scroll for anchor links
+	menuLinks.forEach(function(link) {
+		link.addEventListener('click', function(e) {
 			var href = this.getAttribute('href');
 			
 			// Check if it's an anchor link
-			if (href && href.indexOf('#') === 0) {
+			if (href && href.indexOf('#') === 0 && href.length > 1) {
 				e.preventDefault();
 				
 				var targetId = href.substring(1);
-				var targetElement = document.getElementById(targetId) || document.querySelector('[id="' + targetId + '"]');
+				var targetElement = document.getElementById(targetId) || 
+				                   document.querySelector('[id="' + targetId + '"]');
 				
 				if (targetElement) {
 					// Close mobile menu first
-					if ( window.innerWidth <= 991 ) {
+					if (window.innerWidth <= 991) {
 						closeMenu();
 					}
 					
@@ -132,134 +130,79 @@
 					}, window.innerWidth <= 991 ? 300 : 0);
 				} else {
 					// If target not found, just close menu
-					if ( window.innerWidth <= 991 ) {
+					if (window.innerWidth <= 991) {
 						closeMenu();
 					}
 				}
 			} else {
 				// Regular link - just close menu on mobile
-				if ( window.innerWidth <= 991 ) {
+				if (window.innerWidth <= 991) {
 					closeMenu();
 				}
 			}
 		});
-	}
-	
-	// Close menu when clicking outside
-	document.addEventListener( 'click', function( event ) {
-		if ( window.innerWidth <= 991 ) {
-			var isClickInside = container.contains( event.target );
-			var isCloseButton = event.target.classList.contains('menu-close-button') || 
-			                    event.target.closest('.menu-close-button');
-			var isLanguageButton = event.target.classList.contains('lang-btn') || 
-			                      event.target.closest('.lang-btn');
-			
-			// Don't close if clicking language buttons
-			if (isLanguageButton) {
-				return;
-			}
-			
-			if ( !isClickInside && container.className.indexOf( 'toggled' ) !== -1 && !isCloseButton ) {
+	});
+
+	// Handle window resize
+	var resizeTimer;
+	window.addEventListener('resize', function() {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(function() {
+			// Close menu if window is resized to desktop size
+			if (window.innerWidth > 991 && menuOverlay.classList.contains('active')) {
 				closeMenu();
 			}
-		}
-	});
-	
-	// Close menu on ESC key
-	document.addEventListener( 'keydown', function( event ) {
-		if ( event.key === 'Escape' && container.className.indexOf( 'toggled' ) !== -1 ) {
-			container.className = container.className.replace( ' toggled', '' );
-			button.setAttribute( 'aria-expanded', 'false' );
-			menu.setAttribute( 'aria-expanded', 'false' );
-		}
+		}, 250);
 	});
 
-	/**
-	 * Sets or removes .focus class on an element.
-	 */
-	function toggleFocus() {
-		var self = this;
-
-		// Move up through the ancestors of the current link until we hit .nav-menu.
-		while ( -1 === self.className.indexOf( 'nav-menu' ) ) {
-
-			// On li elements toggle the class .focus.
-			if ( 'li' === self.tagName.toLowerCase() ) {
-				if ( -1 !== self.className.indexOf( 'focus' ) ) {
-					self.className = self.className.replace( ' focus', '' );
+	// Prevent body scroll when menu is open
+	var observer = new MutationObserver(function(mutations) {
+		mutations.forEach(function(mutation) {
+			if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+				if (menuOverlay.classList.contains('active')) {
+					document.body.style.overflow = 'hidden';
 				} else {
-					self.className += ' focus';
+					document.body.style.overflow = '';
 				}
 			}
+		});
+	});
 
-			self = self.parentElement;
+	observer.observe(menuOverlay, {
+		attributes: true,
+		attributeFilter: ['class']
+	});
+
+	// Ensure navbar is always relative (not fixed/sticky)
+	function ensureNavbarRelative() {
+		if (navbar) {
+			navbar.style.setProperty('position', 'relative', 'important');
+			navbar.style.setProperty('top', 'auto', 'important');
+			navbar.style.setProperty('left', 'auto', 'important');
+			navbar.style.setProperty('right', 'auto', 'important');
 		}
 	}
-	
-	// Premium scroll effect for navbar
-	var headerWrapper = document.querySelector('.site-header-affix-wrapper');
-	if (headerWrapper) {
-		var lastScroll = 0;
-		var scrollThreshold = 50;
-		
-		function handleScroll() {
-			var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-			
-			if (currentScroll > scrollThreshold) {
-				headerWrapper.classList.add('scrolled');
-			} else {
-				headerWrapper.classList.remove('scrolled');
+
+	// Call immediately and on scroll
+	ensureNavbarRelative();
+	window.addEventListener('scroll', ensureNavbarRelative, { passive: true });
+
+	// Prevent sticky-bar class from being added
+	if (window.jQuery && jQuery.fn && !jQuery.fn._addClassWithoutSticky) {
+		jQuery.fn._addClassWithoutSticky = jQuery.fn.addClass;
+		jQuery.fn.addClass = function(classNames) {
+			if (typeof classNames === 'string' && classNames.indexOf('sticky-bar') !== -1) {
+				var filtered = classNames
+					.split(/\s+/)
+					.filter(function(cls) { return cls && cls !== 'sticky-bar'; })
+					.join(' ');
+				if (!filtered) {
+					return this;
+				}
+				return jQuery.fn._addClassWithoutSticky.call(this, filtered);
 			}
-			
-			lastScroll = currentScroll;
-		}
-		
-		// Throttle scroll events for better performance
-		var ticking = false;
-		window.addEventListener('scroll', function() {
-			if (!ticking) {
-				window.requestAnimationFrame(function() {
-					handleScroll();
-					ticking = false;
-				});
-				ticking = true;
-			}
-		}, { passive: true });
-		
-		// Initial check
-		handleScroll();
+			return jQuery.fn._addClassWithoutSticky.apply(this, arguments);
+		};
 	}
-	
-	// إلغاء sticky-bar بشكل قوي - منع navbar من البقاء ثابت
-	(function() {
-		function removeSticky() {
-			var masthead = document.getElementById('masthead');
-			var header = document.querySelector('.site-header');
-			var wrapper = document.querySelector('.site-header-affix-wrapper');
-			
-			if (masthead) {
-				masthead.classList.remove('sticky-bar');
-				masthead.style.position = 'relative';
-				masthead.style.top = 'auto';
-			}
-			if (header) {
-				header.classList.remove('sticky-bar');
-				header.style.position = 'relative';
-				header.style.top = 'auto';
-			}
-			if (wrapper) {
-				wrapper.style.position = 'relative';
-				wrapper.style.top = 'auto';
-			}
-		}
-		
-		// إزالة sticky فوراً
-		removeSticky();
-		
-		// إزالة sticky كل 100ms
-		setInterval(removeSticky, 100);
-		
-		// إزالة sticky عند التمرير
-		window.addEventListener('scroll', removeSticky, { passive: true });
-	})();
-} )();
+
+})();
