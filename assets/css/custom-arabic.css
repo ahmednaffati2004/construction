@@ -2756,6 +2756,8 @@ img {
   -webkit-backdrop-filter: blur(15px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: visible !important;
+  overflow-y: visible !important;
 }
 
 .navbar-container {
@@ -2766,6 +2768,9 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 30px;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  position: relative;
 }
 
 /* Logo */
@@ -2887,15 +2892,18 @@ img {
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 12px;
   color: #fff;
-  cursor: pointer;
+  cursor: pointer !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   align-items: center;
   justify-content: center;
-  position: relative;
-  z-index: 10001;
+  position: relative !important;
+  z-index: 10001 !important;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: rgba(209, 139, 44, 0.3);
+  touch-action: manipulation;
 }
 
 .menu-icon {
@@ -2982,12 +2990,12 @@ img {
 }
 
 .mobile-menu-close {
-  position: absolute;
+  position: absolute !important;
   top: 25px;
   right: 25px;
   width: 48px;
   height: 48px;
-  display: flex;
+  display: flex !important;
   align-items: center;
   justify-content: center;
   font-size: 32px;
@@ -2995,12 +3003,15 @@ img {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
   border: 2px solid rgba(255, 255, 255, 0.25);
   border-radius: 12px;
-  cursor: pointer;
+  cursor: pointer !important;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 10001;
+  z-index: 10002 !important;
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: rgba(209, 139, 44, 0.3);
+  touch-action: manipulation;
 }
 
 [dir="rtl"] .mobile-menu-close {
@@ -5353,8 +5364,11 @@ img {
    Prevent Horizontal Scrolling - Final Rules
    ============================================ */
 
-* {
-  max-width: 100%;
+/* Prevent horizontal scroll but allow buttons to work */
+html, body {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 img, video, iframe, embed, object {
@@ -5378,9 +5392,124 @@ img, video, iframe, embed, object {
   max-width: 100%;
 }
 
-/* Ensure all sections don't overflow */
+/* Ensure buttons and interactive elements work properly */
+button, a, input, select, textarea, [role="button"] {
+  max-width: none !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: auto;
+}
+
+/* Specific rules for mobile menu buttons */
+.mobile-menu-toggle,
+.mobile-menu-close,
+.lang-btn {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  max-width: none !important;
+  z-index: 10001 !important;
+}
+
+/* Ensure all sections don't overflow but allow buttons */
 section, div, article, aside, header, footer, nav, main {
   max-width: 100%;
   overflow-x: hidden;
+}
+
+/* EXCEPTION: Navbar and menu elements must allow buttons */
+.main-navbar,
+.navbar-container,
+.mobile-menu-overlay,
+.mobile-menu-content {
+  overflow-x: visible !important;
+}
+
+/* Override overflow for navbar and menu elements - CRITICAL for buttons to work */
+.main-navbar,
+.navbar-container {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+}
+
+.mobile-menu-overlay {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+}
+
+.mobile-menu-content {
+  overflow-x: visible !important;
+  overflow-y: visible !important;
+  position: relative;
+}
+
+/* Ensure buttons inside sections work */
+section button, div button, article button, 
+aside button, header button, footer button, 
+nav button, main button {
+  pointer-events: auto !important;
+  z-index: 10;
+}
+
+/* Fix mobile menu buttons - ensure they work - CRITICAL */
+.mobile-menu-toggle {
+  pointer-events: auto !important;
+  z-index: 10001 !important;
+  cursor: pointer !important;
+  max-width: none !important;
+  position: relative !important;
+  -webkit-tap-highlight-color: rgba(209, 139, 44, 0.3) !important;
+  touch-action: manipulation !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mobile-menu-close {
+  pointer-events: auto !important;
+  z-index: 10002 !important;
+  cursor: pointer !important;
+  max-width: none !important;
+  position: absolute !important;
+  -webkit-tap-highlight-color: rgba(209, 139, 44, 0.3) !important;
+  touch-action: manipulation !important;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mobile-menu-overlay.active .mobile-menu-close {
+  pointer-events: auto !important;
+  z-index: 10001 !important;
+  cursor: pointer !important;
+}
+
+/* Ensure all buttons are clickable */
+button[type="button"],
+button[type="submit"],
+button:not([disabled]) {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+/* CRITICAL: Ensure mobile menu buttons are always clickable */
+.mobile-menu-toggle *,
+.mobile-menu-close * {
+  pointer-events: none !important;
+}
+
+.mobile-menu-toggle,
+.mobile-menu-close {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  z-index: 99999 !important;
+  position: relative !important;
+}
+
+/* Ensure no element covers the buttons */
+.main-navbar *:not(.mobile-menu-toggle):not(.mobile-menu-close) {
+  pointer-events: auto;
+}
+
+.mobile-menu-overlay *:not(.mobile-menu-close) {
+  pointer-events: auto;
 }
 
